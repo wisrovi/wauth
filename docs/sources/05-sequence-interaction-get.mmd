@@ -1,0 +1,35 @@
+%%{init: {'theme': 'base', 'themeVariables': { 'primaryColor': '#0891b2', 'primaryTextColor': '#fff', 'primaryBorderColor': '#0891b2', 'lineColor': '#6b7280', 'secondaryColor': '#f3f4f6', 'tertiaryColor': '#ffffff'}}}%%
+sequenceDiagram
+    participant App as 🖥️ Application
+    participant WAuth as 📦 WAuth
+    participant LD as 💾 LocalDriver
+    participant VA as 🗄️ Vault
+    participant SQLite as 💿 SQLite
+    participant CE as 🔒 CryptoEngine
+
+    App->>WAuth: get("API_KEY")
+    WAuth->>LD: get_secret(key)
+    LD->>VA: get(key)
+    VA->>SQLite: SELECT WHERE key=?
+    
+    alt Secret Found
+        SQLite-->>VA: (encrypted_value, type, ttl, timestamps)
+        VA-->>LD: SecretModel
+        LD->>CE: decrypt(encrypted_value)
+        CE-->>LD: plaintext bytes
+        
+        alt type == "text"
+            LD-->>WAuth: plaintext.decode()
+        else type == "file"
+            LD-->>WAuth: plaintext (bytes)
+        end
+        
+        WAuth-->>App: secret value
+    else Secret Not Found
+        SQLite-->>VA: None
+        VA-->>LD: (None, None)
+        LD-->>WAuth: None
+        WAuth-->>App: None
+    end
+    
+    Note over VA: TTL Check: if time.time() - updated_at > ttl, delete
