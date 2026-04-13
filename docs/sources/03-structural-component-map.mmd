@@ -1,0 +1,98 @@
+%%{init: {'theme': 'base', 'themeVariables': { 'primaryColor': '#7c3aed', 'primaryTextColor': '#fff', 'primaryBorderColor': '#7c3aed', 'lineColor': '#6b7280', 'secondaryColor': '#f3f4f6', 'tertiaryColor': '#ffffff'}}}%%
+classDiagram
+    class WAuth {
+        +db_path: str
+        +custom_key: Optional[str]
+        +set(key, value, ttl)
+        +get(key)
+        +delete(key)
+        +list_keys()
+        +rotate_key(new_key)
+        +backup(path)
+        +restore(path)
+        +async_set()
+        +async_get()
+        +async_delete()
+    }
+    
+    class CryptoEngine {
+        +_key: bytes
+        +_fernet: Fernet
+        +encrypt(data: bytes) str
+        +decrypt(token: str) bytes
+    }
+    
+    class Vault {
+        +db_path: str
+        +db: WSQLite
+        +save(key, encrypted_value, type, ttl)
+        +get(key) Tuple
+        +delete(key)
+        +list_keys()
+        +count() int
+    }
+    
+    class SecretModel {
+        +key: str
+        +value: str
+        +type: str
+        +created_at: float
+        +updated_at: float
+        +ttl: Optional[float]
+    }
+    
+    class LocalDriver {
+        +engine: CryptoEngine
+        +vault: Vault
+        +set_secret(key, value, ttl)
+        +set_file(key, path, ttl)
+        +get_secret(key)
+        +delete_secret(key)
+        +list_keys()
+        +rotate_key(new_key)
+    }
+    
+    class DockerDriver {
+        +secrets_path: str
+        +get_secret(key)
+        +is_docker() bool
+    }
+    
+    class DriverFactory {
+        +local: LocalDriver
+        +docker: DockerDriver
+        +get_value(key)
+        +set_value(key, value)
+    }
+    
+    WAuth --> LocalDriver : uses
+    LocalDriver --> CryptoEngine : encrypts
+    LocalDriver --> Vault : persists
+    Vault --> SecretModel : models
+    DriverFactory --> LocalDriver
+    DriverFactory --> DockerDriver
+    
+    class WAuthError {
+        <<exception>>
+    }
+    class KeyNotFoundError {
+        <<exception>>
+    }
+    class DecryptionError {
+        <<exception>>
+    }
+    class VaultError {
+        <<exception>>
+    }
+    class BackupError {
+        <<exception>>
+    }
+    class RestoreError {
+        <<exception>>
+    }
+    
+    WAuthError <|-- KeyNotFoundError
+    WAuthError <|-- DecryptionError
+    WAuthError <|-- VaultError
+    WAuthError <|-- BackupError
+    WAuthError <|-- RestoreError
