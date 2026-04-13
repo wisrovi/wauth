@@ -1,0 +1,56 @@
+%%{init: {'theme': 'base', 'themeVariables': { 'primaryColor': '#dc2626', 'primaryTextColor': '#fff', 'primaryBorderColor': '#dc2626', 'lineColor': '#6b7280', 'secondaryColor': '#f3f4f6', 'tertiaryColor': '#ffffff'}}}%%
+flowchart TD
+    START([🔄 Operation]) --> OP_TYPE{Operation Type?}
+    
+    OP_TYPE -->|set| VALIDATE[Validate inputs]
+    OP_TYPE -->|get| CHECK_VAULT
+    OP_TYPE -->|delete| CHECK_EXISTS
+    OP_TYPE -->|rotate| CHECK_KEYS
+    OP_TYPE -->|backup| CHECK_VAULT2
+    OP_TYPE -->|restore| PARSE_JSON
+    
+    VALIDATE -->|valid| PYDANTIC[Pydantic Validation]
+    VALIDATE -->|invalid| ERR_VAL[raise ConfigurationError]
+    PYDANTIC --> ENCRYPT[Encrypt]
+    
+    CHECK_VAULT -->|found| DECRYPT[Decrypt]
+    CHECK_VAULT -->|not found| ERR_KNF[raise KeyNotFoundError]
+    DECRYPT -->|success| RETURN[Return value]
+    DECRYPT -->|fail| ERR_DEC[raise DecryptionError]
+    
+    CHECK_EXISTS -->|exists| DELETE[Delete from vault]
+    CHECK_EXISTS -->|not exists| ERR_KNF2[raise KeyNotFoundError]
+    
+    CHECK_KEYS -->|all success| NEW_ENGINE[Swap CryptoEngine]
+    CHECK_KEYS -->|partial fail| WARN_ROT[warning + return results]
+    
+    CHECK_VAULT2 -->|has secrets| JSON[Create JSON backup]
+    CHECK_VAULT2 -->|empty| WARN_EMP[warning: empty vault]
+    
+    PARSE_JSON -->|valid| RESTORE[Import secrets]
+    PARSE_JSON -->|invalid| ERR_RES[raise RestoreError]
+    
+    ERR_VAL --> LOG_ERROR[Log error details]
+    ERR_KNF --> LOG_ERROR
+    ERR_DEC --> LOG_ERROR
+    ERR_KNF2 --> LOG_ERROR
+    ERR_RES --> LOG_ERROR
+    WARN_ROT --> LOG_WARN[Log warning]
+    WARN_EMP --> LOG_WARN
+    
+    LOG_ERROR --> HANDLER[Exception Handler]
+    LOG_WARN --> HANDLER
+    RETURN --> HANDLER
+    DELETE --> HANDLER
+    NEW_ENGINE --> HANDLER
+    JSON --> HANDLER
+    RESTORE --> HANDLER
+    
+    HANDLER --> END([✅ Complete])
+    
+    style START fill:#059669,stroke:#333,stroke-width:2px,color:#fff
+    style ERR_VAL fill:#dc2626,stroke:#333,stroke-width:2px,color:#fff
+    style ERR_KNF fill:#dc2626,stroke:#333,stroke-width:2px,color:#fff
+    style ERR_DEC fill:#dc2626,stroke:#333,stroke-width:2px,color:#fff
+    style ERR_RES fill:#dc2626,stroke:#333,stroke-width:2px,color:#fff
+    style RETURN fill:#10b981,stroke:#333,stroke-width:2px,color:#fff
