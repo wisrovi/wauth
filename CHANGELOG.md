@@ -1,6 +1,19 @@
-# WPipe Changelog
+# WAuth Changelog
 
-All notable changes to WPipe will be documented in this file.
+All notable changes to WAuth will be documented in this file.
+
+---
+
+## [Unreleased]
+
+### Changed
+- **Vault**: Replaced raw `sqlite3` with `wsqlite` (Pydantic-backed ORM) for cleaner data persistence
+- **Vault**: Added `SecretModel` Pydantic model for schema definition (`key`, `value`, `type`)
+- **WAuth class**: Added object-oriented API (`WAuth().set()`, `WAuth().get()`) alongside existing functional API
+
+### Fixed
+- **pyproject.toml**: Updated build targets from old `wpipe` references to `wauth`
+- **Example**: Fixed `examples/00 base/example.py` to use the new `WAuth` class API
 
 ---
 
