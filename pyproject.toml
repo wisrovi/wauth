@@ -72,15 +72,8 @@ Changelog = "https://github.com/wisrovi/wpipe/blob/main/CHANGELOG.md"
 
 [tool.hatch.build.targets.sdist]
 include = [
-    "/wpipe",
-    "/examples/01_basic_pipeline",
-    "/examples/02_api_pipeline",
-    "/examples/11_checkpointing",
-    "/examples/12_timeouts",
-    "/examples/13_type_hinting",
-    "/examples/14_resource_monitor",
-    "/examples/15_export",
-    "/examples/16_parallelism",
+    "/wauth",
+    "/examples",
     "/test",
 ]
 exclude = [
@@ -94,7 +87,7 @@ exclude = [
 ]
 
 [tool.hatch.build.targets.wheel]
-packages = ["wpipe"]
+packages = ["wauth"]
 exclude = [
     "**/*.db",
     "**/*.log",
@@ -110,7 +103,7 @@ python_functions = ["test_*"]
 addopts = "-v --tb=short"
 
 [tool.coverage.run]
-source = ["wpipe"]
+source = ["wauth"]
 branch = true
 omit = [
     "*/tests/*",
