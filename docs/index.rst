@@ -3,8 +3,8 @@ WAuth Documentation
 
 **Machine-Locked Encrypted Secret Management for Python**
 
-.. image:: https://img.shields.io/pypi/v/wpipe.svg
-   :target: https://pypi.org/project/wpipe/
+.. image:: https://img.shields.io/pypi/v/wauth.svg
+   :target: https://pypi.org/project/wauth/
    :alt: PyPI version
 
 .. image:: https://img.shields.io/badge/pylint-10.00%2F10-brightgreen.svg
@@ -41,6 +41,57 @@ simple, secure, machine-locked secret storage using Fernet encryption and SQLite
       :link-type: doc
 
       Frequently asked questions and troubleshooting guide.
+
+External Links
+--------------
+
+- 📦 **PyPI**: https://pypi.org/project/wauth/
+- 🐙 **GitHub**: https://github.com/wisrovi/wauth
+- 🌐 **GitHub Pages**: https://wisrovi.github.io/wauth/
+
+Integration: WPipe
+------------------
+
+Combine **WAuth** with **WPipe** for powerful stateful pipelines with secure secret management.
+
+.. grid:: 2
+
+   .. grid-item-card:: 🔐 WAuth + WPipe Pipeline
+      :link: tutorials
+      :link-type: doc
+
+      Build secure access control pipelines using WAuth for secrets
+      and WPipe for workflow orchestration.
+
+   .. grid-item-card:: 🚀 WPipe (PyPI)
+      :link: https://pypi.org/project/wpipe/
+      :link-type: url
+
+      WPipe is a Python library for building stateful pipelines with
+      conditional logic, tracking, and persistence.
+
+**Example**: Access control pipeline using both libraries:
+
+.. code-block:: python
+
+   from wauth import WAuth
+   from wpipe import Pipeline, Condition, state
+
+   # Store secrets with WAuth
+   auth = WAuth(db_path="secrets.db", custom_key="my-key")
+   auth.set("USER_PASSWORD", "secure-pass")
+
+   # Use in WPipe pipeline
+   @state(name="authenticate")
+   def authenticate(credentials):
+       auth = WAuth(db_path="secrets.db", custom_key="my-key")
+       real_pass = auth.get("USER_PASSWORD")
+       return {"access_granted": credentials.secret == real_pass}
+
+   pipeline = Pipeline(pipeline_name="access_control")
+   pipeline.set_steps([authenticate, Condition(...)])
+
+See :doc:`tutorials` for the full example.
 
 Key Features
 ------------

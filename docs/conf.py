@@ -74,7 +74,7 @@ html_static_path = ["_static"]
 html_extra_path = ["_extra"]
 
 # URL which documentation lives at
-html_baseurl = "https://wpipe.readthedocs.io/en/latest/"
+html_baseurl = "https://wauth.readthedocs.io/en/latest/"
 
 # Generate sitemap
 sitemap_url_scheme = "{link}"

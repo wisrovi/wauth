@@ -435,7 +435,47 @@ make html    # Build Sphinx docs
 make serve   # Preview docs locally
 ```
 
+**Online Documentation:**
+
+| Site | URL |
+|------|-----|
+| **Full API Docs** | https://wauth.readthedocs.io/en/latest/ |
+| **GitHub Pages** | https://wisrovi.github.io/wauth/ |
+| **PyPI** | https://pypi.org/project/wauth/ |
+
 Full API reference is available at `docs/_build/html/index.html`.
+
+## Integration: WPipe
+
+Combine **WAuth** with **WPipe** for powerful stateful pipelines with secure secret management.
+
+| Library | Purpose |
+|---------|---------|
+| **WAuth** | Encrypted secret storage with Fernet |
+| **WPipe** | Stateful pipelines with conditional logic |
+
+**Example**: Access control pipeline:
+
+```python
+from wauth import WAuth
+from wpipe import Pipeline, Condition, state
+
+# Store secrets with WAuth
+auth = WAuth(db_path="secrets.db", custom_key="my-key")
+auth.set("USER_PASSWORD", "secure-pass")
+
+# Use in WPipe pipeline
+@state(name="authenticate")
+def authenticate(credentials):
+    auth = WAuth(db_path="secrets.db", custom_key="my-key")
+    real_pass = auth.get("USER_PASSWORD")
+    return {"access_granted": credentials.secret == real_pass}
+
+pipeline = Pipeline(pipeline_name="access_control")
+pipeline.set_steps([authenticate, Condition(...)])
+```
+
+See `examples/17 pipeline/` for the full example.
 
 ## Author
 

@@ -1,0 +1,6 @@
+name: access_control
+registered_at: '2026-04-13T16:52:10.736348'
+step_count: 2
+steps:
+- '(<State: login v1.0>, ''login'', ''v1.0'', '''')'
+- <wpipe.pipe.pipe.Condition object at 0x74aa5eb20410>
