@@ -6,10 +6,18 @@ All notable changes to WAuth will be documented in this file.
 
 ## [Unreleased]
 
+### Added
+- **examples/17 pipeline/**: New example demonstrating WAuth + WPipe integration for access control
+- **.readthedocs.yaml**: ReadTheDocs configuration file
+
 ### Changed
-- **Vault**: Replaced raw `sqlite3` with `wsqlite` (Pydantic-backed ORM) for cleaner data persistence
-- **Vault**: Added `SecretModel` Pydantic model for schema definition (`key`, `value`, `type`)
-- **WAuth class**: Added object-oriented API (`WAuth().set()`, `WAuth().get()`) alongside existing functional API
+- **pyproject.toml**: Added `furo` theme to docs dependencies
+- **docs/index.rst**: Added cross-references to WPipe, badges with cache-busting
+- **docs/conf.py**: Fixed `html_baseurl` to `wauth.readthedocs.io`
+- **README.md**: Added WPipe integration section
+- **Vault**: Replaced raw `sqlite3` with `wsqlite` (Pydantic-backed ORM)
+- **Vault**: Added `SecretModel` Pydantic model for schema definition
+- **WAuth class**: Added object-oriented API (`WAuth().set()`, `WAuth().get()`)
 
 ### Fixed
 - **pyproject.toml**: Updated build targets from old `wpipe` references to `wauth`

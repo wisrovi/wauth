@@ -3,15 +3,21 @@ WAuth Documentation
 
 **Machine-Locked Encrypted Secret Management for Python**
 
-.. image:: https://img.shields.io/pypi/v/wauth.svg
+| |pyi| |pyver| |cov| |lint|
+
+.. |pyi| image:: https://img.shields.io/pypi/v/wauth.svg?1
    :target: https://pypi.org/project/wauth/
    :alt: PyPI version
 
-.. image:: https://img.shields.io/badge/pylint-10.00%2F10-brightgreen.svg
-   :alt: Pylint Score
+.. |pyver| image:: https://img.shields.io/pypi/pyversions/wauth.svg?1
+   :target: https://pypi.org/project/wauth/
+   :alt: Python versions
 
-.. image:: https://img.shields.io/badge/coverage-98%25-brightgreen.svg
+.. |cov| image:: https://img.shields.io/badge/coverage-98%25-brightgreen.svg?1
    :alt: Test Coverage
+
+.. |lint| image:: https://img.shields.io/badge/pylint-10.00%2F10-brightgreen.svg?1
+   :alt: Pylint Score
 
 Welcome to the official documentation for **WAuth**, a Python library that provides
 simple, secure, machine-locked secret storage using Fernet encryption and SQLite.
