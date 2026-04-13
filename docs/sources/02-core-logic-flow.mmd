@@ -1,0 +1,30 @@
+%%{init: {'theme': 'base', 'themeVariables': { 'primaryColor': '#059669', 'primaryTextColor': '#fff', 'primaryBorderColor': '#059669', 'lineColor': '#6b7280', 'secondaryColor': '#f3f4f6', 'tertiaryColor': '#ffffff'}}}%%
+flowchart TD
+    START(["🚀 Inicio"]) --> CHECK_TYPE{¿Text or File?}
+    
+    CHECK_TYPE -->|Text| ENCODE[Encode UTF-8]
+    CHECK_TYPE -->|File| READ_FILE[Read File bytes]
+    
+    ENCODE --> CHECK_KEY{¿Custom Key?}
+    READ_FILE --> CHECK_KEY
+    
+    CHECK_KEY -->|Yes| HASH_SHA256[Hash SHA-256]
+    CHECK_KEY -->|No| MACHINE_ID[Get Machine ID]
+    
+    HASH_SHA256 --> GENERATE_KEY[Generate 32-byte key]
+    MACHINE_ID --> SALT["wisrovi-salt-{machine_id}"]
+    SALT --> SHA256[SHA-256 hash]
+    SHA256 --> GENERATE_KEY
+    
+    GENERATE_KEY --> BASE64[Base64 URL-safe]
+    BASE64 --> FERNET[Fernet AES-128-CBC]
+    
+    FERNET --> ENCRYPT["🔒 Encrypt data"]
+    ENCRYPT --> SAVE_VAULT[Save to Vault]
+    SAVE_VAULT --> INSERT_DB[INSERT OR REPLACE SQLite]
+    INSERT_DB --> SUCCESS["✅ Success"]
+    
+    style START fill:#059669,stroke:#333,stroke-width:2px,color:#fff
+    style CHECK_KEY fill:#f59e0b,stroke:#333,stroke-width:2px
+    style FERNET fill:#7c3aed,stroke:#333,stroke-width:2px,color:#fff
+    style SUCCESS fill:#10b981,stroke:#333,stroke-width:2px,color:#fff
