@@ -3,22 +3,23 @@ requires = ["hatchling"]
 build-backend = "hatchling.build"
 
 [project]
-name = "wpipe"
-version = "1.5.3"
+name = "wauth"
+version = "0.1.0"
 authors = [
     { name = "William Steve Rodriguez Villamizar", email = "wisrovi.rodriguez@gmail.com" }
 ]
-description = "Pipeline library with API integration for task orchestration and execution tracking"
+description = "Machine-locked encrypted secret management library with Fernet encryption"
 readme = "README.md"
 license = { file = "LICENSE" }
 requires-python = ">=3.9"
 keywords = [
-    "pipeline",
-    "workflow",
-    "tasks",
-    "orchestration",
-    "api",
-    "worker",
+    "secret",
+    "encryption",
+    "security",
+    "vault",
+    "secrets",
+    "fernet",
+    "cryptography",
 ]
 classifiers = [
     "Programming Language :: Python :: 3",
@@ -30,20 +31,15 @@ classifiers = [
     "License :: OSI Approved :: MIT License",
     "Operating System :: OS Independent",
     "Topic :: Software Development :: Libraries :: Python Modules",
+    
     "Intended Audience :: Developers",
-    "Development Status :: 5 - Production/Stable",
+    "Development Status :: 4 - Beta",
 ]
 dependencies = [
-    "requests>=2.31.0",
-    "loguru>=0.7.0",
-    "pandas>=2.0.0",
-    "pyyaml>=6.0.1",
-    "tqdm>=4.66.0",
-    "rich>=13.7.0",
-    "pydantic>=2.0.0",
-    "fastapi>=0.100.0",
-    "uvicorn>=0.23.0",
+    "cryptography>=41.0.0",
     "wsqlite>=0.1.0",
+    "pydantic>=2.0.0",
+    "loguru>=0.7.0",
 ]
 
 [project.optional-dependencies]
@@ -64,11 +60,11 @@ docs = [
 ]
 
 [project.urls]
-Homepage = "https://github.com/wisrovi/wpipe"
-Documentation = "https://wpipe.readthedocs.io/en/latest/"
-Repository = "https://github.com/wisrovi/wpipe"
-Issues = "https://github.com/wisrovi/wpipe/issues"
-Changelog = "https://github.com/wisrovi/wpipe/blob/main/CHANGELOG.md"
+Homepage = "https://github.com/wisrovi/wauth"
+Documentation = "https://wauth.readthedocs.io/en/latest/"
+Repository = "https://github.com/wisrovi/wauth"
+Issues = "https://github.com/wisrovi/wauth/issues"
+Changelog = "https://github.com/wisrovi/wauth/blob/main/CHANGELOG.md"
 
 [tool.hatch.build.targets.sdist]
 include = [

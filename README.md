@@ -1,11 +1,11 @@
 # WAuth — Machine-Locked Encrypted Secret Management
 
-[![PyPI version](https://img.shields.io/pypi/v/wpipe.svg)](https://pypi.org/project/wpipe/)
-[![Python 3.9+](https://img.shields.io/pypi/pyversions/wpipe.svg)](https://pypi.org/project/wpipe/)
+[![PyPI version](https://img.shields.io/pypi/v/wauth.svg)](https://pypi.org/project/wauth/)
+[![Python 3.9+](https://img.shields.io/pypi/pyversions/wauth.svg)](https://pypi.org/project/wauth/)
 [![Pylint Score](https://img.shields.io/badge/pylint-9.95%2F10-brightgreen.svg)](#)
 [![Test Coverage](https://img.shields.io/badge/coverage-98%25-brightgreen.svg)](#)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
-[![LTS](https://img.shields.io/badge/LTS-1.6.0-blue.svg)](VERSIONING.md)
+[![LTS](https://img.shields.io/badge/LTS-0.1.0-blue.svg)](VERSIONING.md)
 
 > **Store, rotate, back up, and retrieve secrets encrypted with Fernet (AES-256), backed by SQLite — tied to the machine they were created on.**
 
@@ -47,14 +47,14 @@
 ### From PyPI
 
 ```bash
-pip install wpipe
+pip install wauth
 ```
 
 ### From Source
 
 ```bash
-git clone https://github.com/wisrovi/wpipe.git
-cd wpipe
+git clone https://github.com/wisrovi/wauth.git
+cd wauth
 python -m venv .venv && source .venv/bin/activate
 pip install -e ".[dev,docs]"
 ```
