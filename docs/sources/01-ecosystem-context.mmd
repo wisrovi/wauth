@@ -1,0 +1,36 @@
+%%{init: {'theme': 'base', 'themeVariables': { 'primaryColor': '#1e40af', 'primaryTextColor': '#fff', 'primaryBorderColor': '#1e40af', 'lineColor': '#6b7280', 'secondaryColor': '#f3f4f6', 'tertiaryColor': '#ffffff'}}}%%
+flowchart TB
+    subgraph External["🌍 External World"]
+        A["🖥️ Application"]
+        ENV["🔐 Environment Variables"]
+        DOCKER["🐳 Docker Secrets"]
+    end
+
+    subgraph WAuth["⚡ WAuth System"]
+        WA["📦 WAuth Class"]
+        DF["🏭 DriverFactory"]
+        LD["💾 LocalDriver"]
+        DD["🐳 DockerDriver"]
+        CE["🔒 CryptoEngine"]
+        VA["🗄️ Vault"]
+    end
+
+    subgraph Storage["💿 Storage Layer"]
+        DB["📁 SQLite DB"]
+        FS["📂 Filesystem"]
+    end
+
+    A -->|set/get/delete| WA
+    WA --> DF
+    DF -->|is Docker?| DD
+    DD -->|read| DOCKER
+    DOCKER -->|not found| DF
+    DF --> LD
+    LD --> CE
+    LD --> VA
+    VA --> DB
+    CE -->|encrypt/decrypt| FS
+
+    style WAuth fill:#1e40af,stroke:#333,stroke-width:2px,color:#fff
+    style External fill:#f3f4f6,stroke:#333,stroke-width:1px
+    style Storage fill:#7c3aed,stroke:#333,stroke-width:2px,color:#fff
