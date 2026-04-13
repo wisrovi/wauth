@@ -1,0 +1,31 @@
+%%{init: {'theme': 'base', 'themeVariables': { 'primaryColor': '#dc2626', 'primaryTextColor': '#fff', 'primaryBorderColor': '#dc2626', 'lineColor': '#6b7280', 'secondaryColor': '#f3f4f6', 'tertiaryColor': '#ffffff'}}}%%
+stateDiagram-v2
+    [*] --> Initialize: Import WAuth
+    
+    state Initialize {
+        [*] --> LoadConfig: TOML config
+        LoadConfig --> ResolveDB: Expand path
+        ResolveDB --> CreateDriver: LocalDriver()
+        CreateDriver --> InitVault: Create WSQLite
+        InitVault --> Ready
+    }
+    
+    Ready --> SetOperation: auth.set(key, value)
+    Ready --> GetOperation: auth.get(key)
+    Ready --> DeleteOperation: auth.delete(key)
+    Ready --> ListOperation: auth.list_keys()
+    Ready --> RotateOperation: auth.rotate_key()
+    Ready --> BackupOperation: auth.backup()
+    Ready --> RestoreOperation: auth.restore()
+    
+    SetOperation --> Ready: Commit success
+    GetOperation --> Ready: Return value
+    DeleteOperation --> Ready: Confirm delete
+    ListOperation --> Ready: Return keys list
+    RotateOperation --> Ready: All migrated
+    BackupOperation --> Ready: Write JSON
+    RestoreOperation --> Ready: Import count
+    
+    Ready --> Shutdown: Process ends
+    Shutdown --> [*]: Connection closed
+    
