@@ -1,0 +1,42 @@
+%%{init: {'theme': 'base', 'themeVariables': { 'primaryColor': '#1e40af', 'primaryTextColor': '#fff', 'primaryBorderColor': '#1e40af', 'lineColor': '#6b7280', 'secondaryColor': '#f3f4f6', 'tertiaryColor': '#ffffff'}}}%%
+flowchart TB
+    subgraph CI["🔄 CI Pipeline"]
+        START["📝 Push to main"]
+        LINT["🔍 Pylint >= 9.5"]
+        FORMAT["🎨 Black + isort"]
+        TYPE["🔎 MyPy Type Check"]
+        TESTS["🧪 pytest + cov >= 85%"]
+        SECURITY["🛡️ Bandit Scan"]
+    end
+    
+    subgraph CD["🚀 CD Pipeline"]
+        BUILD["📦 Build Package"]
+        TEST_PYPI["🧪 Test PyPI Upload"]
+        PUBLISH["📤 Publish to PyPI"]
+        RELEASE["🏷️ Create GitHub Release"]
+    end
+    
+    subgraph VERIFY["✅ Verify"]
+        DOCS["📚 Build Sphinx Docs"]
+        QUALITY["📊 Quality Badge Update"]
+        STATUS["✅ Status Check"]
+    end
+    
+    START --> LINT
+    LINT --> FORMAT
+    FORMAT --> TYPE
+    TYPE --> TESTS
+    TESTS --> SECURITY
+    SECURITY --> BUILD
+    BUILD --> TEST_PYPI
+    TEST_PYPI --> PUBLISH
+    PUBLISH --> RELEASE
+    RELEASE --> DOCS
+    DOCS --> QUALITY
+    QUALITY --> STATUS
+    
+    style CI fill:#dbeafe,stroke:#1e40af,stroke-width:2px
+    style CD fill:#d1fae5,stroke:#059669,stroke-width:2px
+    style VERIFY fill:#f3f4f6,stroke:#6b7280,stroke-width:2px
+    style START fill:#059669,stroke:#333,stroke-width:2px,color:#fff
+    style STATUS fill:#10b981,stroke:#333,stroke-width:2px,color:#fff
