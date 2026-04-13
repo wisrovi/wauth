@@ -123,60 +123,59 @@ wauth/
 
 ### System Workflow
 
-```mermaid
-graph TD
-    A[Application] -->|WAuth.set key, value, ttl| B[WAuth Class]
-    A -->|WAuth.get key| B
-    A -->|WAuth.delete key| B
-    A -->|WAuth.rotate_key new_key| B
-    A -->|WAuth.backup output| B
-    A -->|WAuth.restore input| B
-    B -->|Encrypt| C[CryptoEngine]
-    C -->|Fernet AES| D[Encrypted Blob]
-    B -->|Save| E[Vault]
-    E -->|INSERT OR REPLACE| F[SQLite DB]
-    F -->|SELECT| E
-    E -->|Return encrypted + type| B
-    B -->|Decrypt| C
-    C -->|Plaintext| A
-
-    G[Docker Container] -->|is_docker?| H[DriverFactory]
-    H -->|Yes: try Docker| I[DockerDriver]
-    I -->|Read /run/secrets/key| J[Filesystem Secret]
-    J -->|Not found| H
-    H -->|Fallback| K[LocalDriver]
-    K -->|Encrypted Vault| F
+```
+Application --> WAuth.set(key, value, ttl) --> CryptoEngine (Fernet AES) --> Vault (SQLite)
+Application --> WAuth.get(key)            --> Vault --> CryptoEngine --> Decrypt
+Docker Container: DriverFactory checks /run/secrets, falls back to LocalDriver
 ```
 
 ### Encryption Flow
 
-```mermaid
-sequenceDiagram
-    participant App
-    participant WAuth
-    participant CryptoEngine
-    participant Vault
-    participant SQLite
+```
+App:set("API_KEY", "secret") 
+  --> WAuth 
+    --> CryptoEngine.encrypt() 
+      --> Derive key (machine_id or custom_key) 
+        --> Fernet.encrypt() 
+          --> Vault.save() 
+            --> SQLite
+```
 
-    App->>WAuth: set("API_KEY", "secret", ttl=3600)
-    WAuth->>CryptoEngine: encrypt(b"secret")
-    CryptoEngine->>CryptoEngine: Derive key from machine ID or custom_key
-    CryptoEngine-->>WAuth: Fernet token (str)
-    WAuth->>Vault: save("API_KEY", token, "text", ttl=3600)
-    Vault->>SQLite: INSERT OR REPLACE with timestamps
-    SQLite-->>Vault: Committed
-    Vault-->>WAuth: Success
-    WAuth-->>App: None
+### File Structure
 
-    App->>WAuth: get("API_KEY")
-    WAuth->>Vault: get("API_KEY")
-    Vault->>Vault: Check TTL expiration
-    Vault->>SQLite: SELECT WHERE key="API_KEY"
-    SQLite-->>Vault: (token, "text")
-    Vault-->>WAuth: (token, "text")
-    WAuth->>CryptoEngine: decrypt(token)
-    CryptoEngine-->>WAuth: b"secret"
-    WAuth-->>App: "secret"
+```
+wauth/
+├── __init__.py          # WAuth class
+├── core.py              # CryptoEngine (Fernet)
+├── vault.py             # SecretModel + Vault
+├── utils.py             # Machine ID detection
+├── exceptions.py        # Exception hierarchy
+├── drivers/
+│   ├── __init__.py     # DriverFactory
+│   ├── local.py         # LocalDriver
+│   └── docker.py        # DockerDriver
+└── test/                # pytest suite
+```
+
+### Encryption Flow
+
+```
+# set() operation:
+App:set("API_KEY", "secret")
+  --> WAuth
+    --> CryptoEngine.encrypt()
+      --> Derive key (machine_id + salt --> SHA-256)
+      --> Fernet.encrypt() --> token
+    --> Vault.save(token, "text", ttl)
+      --> SQLite INSERT
+
+# get() operation:
+App:get("API_KEY")
+  --> Vault.get(key)
+    --> SQLite SELECT
+    --> Check TTL (delete if expired)
+  --> CryptoEngine.decrypt(token)
+    --> Return plaintext
 ```
 
 ## Configuration
