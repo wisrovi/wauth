@@ -1,0 +1,36 @@
+%%{init: {'theme': 'base', 'themeVariables': { 'primaryColor': '#0891b2', 'primaryTextColor': '#fff', 'primaryBorderColor': '#0891b2', 'lineColor': '#6b7280', 'secondaryColor': '#f3f4f6', 'tertiaryColor': '#ffffff'}}}%%
+sequenceDiagram
+    participant App as 🖥️ Application
+    participant WAuth as 📦 WAuth
+    participant DF as 🏭 DriverFactory
+    participant LD as 💾 LocalDriver
+    participant CE as 🔒 CryptoEngine
+    participant VA as 🗄️ Vault
+    participant SQLite as 💿 SQLite
+
+    App->>WAuth: set("API_KEY", "secret", ttl=3600)
+    WAuth->>DF: set_secret(key, value, ttl)
+    DF->>LD: set_secret(key, value, ttl)
+    LD->>CE: encrypt(value.encode())
+    CE->>CE: Derive key from machine_id
+    
+    alt Custom Key Provided
+        CE->>CE: SHA-256(custom_key)
+    else Machine Key
+        CE->>CE: get_machine_id()
+        CE->>CE: SHA-256("wisrovi-salt-" + machine_id)
+    end
+    
+    CE->>CE: Base64 URL-safe encode
+    CE->>CE: Fernet.encrypt(data)
+    CE-->>LD: encrypted_token
+    LD->>VA: save(key, encrypted_token, "text", ttl)
+    VA->>SQLite: INSERT OR REPLACE secret
+    
+    SQLite-->>VA: Commit success
+    VA-->>LD: Success
+    LD-->>DF: Success
+    DF-->>WAuth: Success
+    WAuth-->>App: None
+    
+    Note over App,SQLite: Complete encryption & persistence flow
