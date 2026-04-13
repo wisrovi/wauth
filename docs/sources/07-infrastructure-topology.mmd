@@ -1,0 +1,38 @@
+%%{init: {'theme': 'base', 'themeVariables': { 'primaryColor': '#ea580c', 'primaryTextColor': '#fff', 'primaryBorderColor': '#ea580c', 'lineColor': '#6b7280', 'secondaryColor': '#f3f4f6', 'tertiaryColor': '#ffffff'}}}%%
+flowchart TB
+    subgraph Cloud["☁️ Cloud Environment"]
+        subgraph DockerHost["🐳 Docker Host"]
+            subgraph Container["📦 Container"]
+                WA["⚡ WAuth Application"]
+                RUN_SECRETS["📁 /run/secrets"]
+            end
+            DOCKER_API["🐳 Docker API"]
+        end
+        
+        subgraph K8s["☸️ Kubernetes/Swarm"]
+            SECRET_MGR["🔐 Secret Manager"]
+            VOL["�Volumes"]
+        end
+    end
+    
+    subgraph Host["🖥️ Host Machine"]
+        APP["🖥️ Application"]
+        WAUTH["⚡ WAuth Lib"]
+        VAULT_DIR["📁 ~/.wisrovi/"]
+        DB["💿 wauth.db"]
+    end
+    
+    APP -->|import| WAUTH
+    WAUTH -->|store secrets| VAULT_DIR
+    WAUTH -->|read| RUN_SECRETS
+    
+    DOCKER_API -->|mount secrets| RUN_SECRETS
+    SECRET_MGR -->|manage| DOCKER_API
+    
+    VAULT_DIR -->|persist| DB
+    
+    VOL -->|volume mount| WAUTH
+    
+    style Cloud fill:#fee2e2,stroke:#ea580c,stroke-width:2px
+    style Host fill:#fef3c7,stroke:#f59e0b,stroke-width:2px
+    style Container fill:#ffedd5,stroke:#ea580c,stroke-width:2px
