@@ -1,0 +1,28 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(pip install *)",
+      "Bash(ruff *)",
+      "Bash(black *)",
+      "Bash(pip list)",
+      "Read(//home/william.rodriguez/Documents/**)",
+      "Bash(mkdir *)",
+      "Bash(python3 *)",
+      "Bash(sphinx-apidoc *)",
+      "Bash(sphinx-build *)",
+      "Bash(ls *)",
+      "Bash(sed *)",
+      "Bash(do *)",
+      "Bash(done)",
+      "Bash(then)",
+      "Bash(true)",
+      "Bash(else)",
+      "Bash(fi)",
+      "Bash(grep *)",
+      "Bash(pip show *)",
+      "Bash(rm *)",
+      "Bash(make *)"
+    ]
+  },
+  "$version": 3
+}
