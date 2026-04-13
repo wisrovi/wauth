@@ -1,0 +1,41 @@
+%%{init: {'theme': 'base', 'themeVariables': { 'primaryColor': '#dc2626', 'primaryTextColor': '#fff', 'primaryBorderColor': '#dc2626', 'lineColor': '#6b7280', 'secondaryColor': '#f3f4f6', 'tertiaryColor': '#ffffff'}}}%%
+flowchart TB
+    subgraph Perimeter1["🛡️ PERÍMETRO 1: Aplicación"]
+        APP["🖥️ Application Code"]
+        WAUTH["⚡ WAuth Library"]
+    end
+    
+    subgraph Perimeter2["🔐 PERÍMETRO 2: Criptografía"]
+        KEY_DERIV["🔑 Key Derivation (SHA-256)"]
+        FERNET["🔒 Fernet AES-128-CBC"]
+        MACHINE_LOCK["🔗 Machine Locking"]
+    end
+    
+    subgraph Perimeter3["🗄️ PERÍMETRO 3: Almacenamiento"]
+        SQL["💿 SQLite Encryption"]
+        VAULT["🗄️ Vault Access"]
+        PYDANTIC["📋 Pydantic Validation"]
+    end
+    
+    subgraph Perimeter4["🐳 PERÍMETRO 4: Contenedor"]
+        DOCKER["🐳 Docker Secrets"]
+        RUNC["⚡ Container Runtime"]
+        SECCOMP["🔒 seccomp/AppArmor"]
+    end
+    
+    APP --> WAUTH
+    WAUTH --> KEY_DERIV
+    KEY_DERIV --> FERNET
+    FERNET --> MACHINE_LOCK
+    MACHINE_LOCK --> SQL
+    SQL --> VAULT
+    VAULT --> PYDANTIC
+    PYDANTIC --> DOCKER
+    DOCKER --> RUNC
+    RUNC --> SECCOMP
+    
+    style Perimeter1 fill:#dbeafe,stroke:#1e40af,stroke-width:2px
+    style Perimeter2 fill:#fee2e2,stroke:#dc2626,stroke-width:2px
+    style Perimeter3 fill:#ede9fe,stroke:#7c3aed,stroke-width:2px
+    style Perimeter4 fill:#fef3c7,stroke:#d97706,stroke-width:2px
+    
