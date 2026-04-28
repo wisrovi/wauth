@@ -5,9 +5,9 @@
 [![Pylint Score](https://img.shields.io/badge/pylint-9.95%2F10-brightgreen.svg)](#)
 [![Test Coverage](https://img.shields.io/badge/coverage-98%25-brightgreen.svg)](#)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
-[![LTS](https://img.shields.io/badge/LTS-0.3.1-blue.svg)](VERSIONING.md)
+[![LTS](https://img.shields.io/badge/LTS-0.4.0-blue.svg)](VERSIONING.md)
 
-> **Store, rotate, back up, and retrieve secrets encrypted with Fernet (AES-256), backed by SQLite — tied to the machine they were created on.**
+> **Store, rotate, back up, retrieve, and verify secrets encrypted with Fernet (AES-256), backed by SQLite — tied to the machine they were created on.**
 
 ---
 
@@ -22,6 +22,7 @@
 - **TTL Support** — Set time-to-live on secrets for automatic expiration.
 - **Backup & Restore** — Export and import encrypted vault snapshots.
 - **Async Support** — `async_set()`, `async_get()`, `async_delete()`, `async_backup()`, `async_restore()` for async workflows.
+- **Secret Verification** — `valid()` and `async_valid()` for secure secret checking without exposing the actual value.
 - **Custom Exceptions** — Structured exception hierarchy (`DecryptionError`, `KeyNotFoundError`, `VaultError`, etc.).
 - **Structured Logging** — Full `loguru` integration for diagnostics.
 - **Configuration File** — TOML-based configuration support.
@@ -383,13 +384,92 @@ except WAuthError:
     print("Any WAuth-related error")
 ```
 
-### Running the Example
+### Secure Secret Verification
+
+When you only need to check if a value matches a stored secret, use `valid()` instead of `get()`. This prevents the secret from being exposed in your code or logs.
+
+```python
+from wauth import WAuth
+
+auth = WAuth()
+auth.set("API_KEY", "secret123")
+
+# LESS SECURE: Using get() exposes the secret
+# api_key = auth.get("API_KEY")  # DON'T DO THIS
+# if api_key == user_input:  # Secret is now in memory
+
+# MORE SECURE: Using valid() never exposes the secret
+user_input = input("Enter API key: ")
+if auth.valid("API_KEY", user_input):
+    print("Access granted")
+else:
+    print("Access denied")
+# The secret never leaves the wauth library
+```
+
+The `valid()` method:
+- Uses constant-time comparison to prevent timing attacks
+- Never returns or exposes the actual secret
+- Only returns `True` or `False`
+
+### Async Secret Verification
+
+```python
+import asyncio
+from wauth import WAuth
+
+async def main():
+    auth = WAuth()
+    auth.set("API_KEY", "secret123")
+    
+    user_input = input("Enter API key: ")
+    if await auth.async_valid("API_KEY", user_input):
+        print("Access granted")
+
+asyncio.run(main())
+```
+
+### Running the Examples
 
 ```bash
+# Basic usage
 python "examples/00 base/example.py"
-# Output: Retrieved token: 7483920:ABC-DEF-GHI valid
-#         Retrieved token with custom key: 7483920:ABC-DEF-GHI valid
+
+# Secure secret verification (NEW in v0.4.0)
+python "examples/18 valid method/example.py"
+
+# Async secret verification
+python "examples/19 async valid/example.py"
+
+# Security comparison: get() vs valid()
+python "examples/20 security comparison/example.py"
 ```
+
+### Examples
+
+| # | Example | Description |
+|---|----------|-------------|
+| 00 | base | Basic usage of WAuth |
+| 01 | file storage | Storing encrypted files |
+| 02 | TTL expiration | Time-to-live secrets |
+| 03 | key rotation | Rotating encryption keys |
+| 04 | backup and restore | Vault backup/restore |
+| 05 | async API | Async secret operations |
+| 06 | exception handling | Handling WAuth errors |
+| 07 | functional API | Functional-style API |
+| 08 | Docker secrets | Docker integration |
+| 09 | config file | TOML configuration |
+| 10 | logging integration | Loguru logging |
+| 11 | migration from env | Migration from env vars |
+| 12 | multiple vaults | Multiple database files |
+| 13 | security best practices | Security guidelines |
+| 14 | web app integration | Web framework integration |
+| 15 | CI-CD pipeline | CI/CD integration |
+| 16 | bulk operations | Bulk secret operations |
+| 17 | pipeline | WPipe integration |
+| 18 | valid method | **NEW** Secure secret verification |
+| 19 | async valid | **NEW** Async verification |
+| 20 | security comparison | **NEW** get() vs valid() |
 
 ## Testing & Quality
 
@@ -411,15 +491,16 @@ make quality       # lint + test + format check
 
 | Metric | Score | Target |
 |--------|-------|--------|
+| **Version** | 0.4.0 | Latest |
 | **Pylint (wauth/)** | 9.95/10 | ≥ 9.5 |
 | **Pylint (test/)** | 9.89/10 | ≥ 9.5 |
 | **Test Coverage** | 98% | ≥ 95% |
-| **Tests** | 129 passing | 100% |
+| **Tests** | 129+ passing | 100% |
 | **Bandit Security** | 0 medium/high | 0 |
 
 ### LTS Status
 
-WAuth v0.3.1 is an **LTS (Long Term Support)** release:
+WAuth v0.4.0 is the **latest stable** release:
 
 - 24 months of security backports
 - Stable public API with deprecation guarantees

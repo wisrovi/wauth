@@ -3,6 +3,8 @@
 Handles encryption/decryption of secrets and persistence via the Vault.
 """
 
+import hmac
+
 # pylint: disable=import-outside-toplevel
 from typing import Optional
 
@@ -84,8 +86,6 @@ class LocalDriver:
         Raises:
             KeyNotFoundError: If the key does not exist.
         """
-        from ..exceptions import KeyNotFoundError
-
         self.vault.delete(key)
         _info(f"Secret deleted: key='{key}'")
 
@@ -144,3 +144,28 @@ class LocalDriver:
             _warning("Partial key rotation — some keys failed to migrate")
 
         return results
+
+    def valid_secret(self, key: str, value_to_check: str) -> bool:
+        """Verify if stored secret matches provided value without exposing it.
+
+        Unlike get_secret(), this method never returns the decrypted secret.
+        Uses constant-time comparison to prevent timing attacks.
+
+        Args:
+            key: Unique identifier for the secret.
+            value_to_check: Plaintext value to compare against stored secret.
+
+        Returns:
+            True if values match, False otherwise (or if key doesn't exist).
+        """
+        encrypted, v_type = self.vault.get(key)
+        if not encrypted or v_type != "text":
+            _debug(f"Secret not found or not text: key='{key}'")
+            return False
+        try:
+            decrypted = self.engine.decrypt(encrypted).decode()
+            # Constant-time comparison to prevent timing attacks
+            return hmac.compare_digest(decrypted, value_to_check)
+        except Exception:  # noqa: BLE001, pylint: disable=broad-exception-caught
+            _error(f"Failed to verify secret: key='{key}'")
+            return False

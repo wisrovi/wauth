@@ -19,6 +19,7 @@ Functional API
 .. autofunction:: wauth.set
 .. autofunction:: wauth.set_file
 .. autofunction:: wauth.get
+.. autofunction:: wauth.valid
 .. autofunction:: wauth.delete
 .. autofunction:: wauth.list_keys
 

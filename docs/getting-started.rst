@@ -161,7 +161,54 @@ Async Support
        await auth.async_set("KEY", "value")
        value = await auth.async_get("KEY")
 
-   asyncio.run(main())
+    asyncio.run(main())
+
+Secure Secret Verification
+~~~~~~~~~~~~~~~~~~~~~~~~~
+
+When you only need to check if a value matches a stored secret, use ``valid()`` instead of ``get()``:
+
+.. code-block:: python
+
+    from wauth import WAuth
+
+    auth = WAuth()
+    auth.set("API_KEY", "secret123")
+
+    # LESS SECURE: Using get() exposes the secret
+    # api_key = auth.get("API_KEY")  # DON'T DO THIS
+    # if api_key == user_input:  # Secret is now in memory
+
+    # MORE SECURE: Using valid() never exposes the secret
+    user_input = input("Enter API key: ")
+    if auth.valid("API_KEY", user_input):
+        print("Access granted")
+    else:
+        print("Access denied")
+    # The secret never leaves the wauth library
+
+The ``valid()`` method:
+- Uses constant-time comparison to prevent timing attacks
+- Never returns or exposes the actual secret
+- Only returns ``True`` or ``False``
+
+Async Secret Verification
+~~~~~~~~~~~~~~~~~~~~~~~
+
+.. code-block:: python
+
+    import asyncio
+    from wauth import WAuth
+
+    async def main():
+        auth = WAuth()
+        auth.set("API_KEY", "secret123")
+        
+        user_input = input("Enter API key: ")
+        if await auth.async_valid("API_KEY", user_input):
+            print("Access granted")
+
+    asyncio.run(main())
 
 Verbose Logging
 ~~~~~~~~~~~~~~~

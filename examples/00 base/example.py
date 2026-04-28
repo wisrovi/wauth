@@ -25,6 +25,9 @@ def main() -> None:
 
     # Retrieve and decrypt the secret (only works on this machine)
     token = auth.get("TELEGRAM_TOKEN")
+    
+    TMP_TOKEN = "1234"
+    auth.valid("TELEGRAM_TOKEN", TMP_TOKEN)
 
 
     print(f"Retrieved token: {token}", "valid" if token == REAL_TOKEN else "invalid")

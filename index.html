@@ -276,7 +276,7 @@
 <body>
     <section class="hero">
         <div class="hero-content">
-            <div class="badge">v0.3.2 — Secure Secret Management</div>
+            <div class="badge">v0.4.0 — Secure Secret Management</div>
             <h1><span>wauth</span> — Machine-Locked Encrypted Secrets</h1>
             <p class="subtitle">Store, rotate, and retrieve secrets encrypted with Fernet (AES-128-CBC). Secrets are tied to the machine they were created on, preventing accidental leakage across environments.</p>
             <div class="actions">
@@ -311,11 +311,16 @@
                 <h2 class="section-title">Secure, Simple <span style="color: var(--primary);">Secret Management</span></h2>
                 <p class="section-desc">Everything you need to store and manage secrets securely without external dependencies or complex setups.</p>
             </div>
-            <div class="features">
+        <div class="features">
                 <div class="feature">
-                    <div class="feature-icon"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M16.5 10.5V6.75a4.5 4.5 0 10-9 0v3.75m-.75 11.25h10.5a2.25 2.25 0 002.25-2.25v-6.75a2.25 2.25 0 00-2.25-2.25H6.75a2.25 2.25 0 00-2.25 2.25v6.75a2.25 2.25 0 002.25 2.25z" /></svg></div>
-                    <h3>Fernet Encryption</h3>
-                    <p>AES-128-CBC with HMAC-SHA256 for authenticated encryption.</p>
+                    <div class="feature-icon"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M12 6v6h4.5m4.5 0a9 9 0 11-18 0 9 9 0 0118 0z" /></svg></div>
+                    <h3>TTL Support</h3>
+                    <p>Auto-expire secrets with time-to-live settings.</p>
+                </div>
+                <div class="feature">
+                    <div class="feature-icon"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75L11.25 15 15 9.75m-3-7.036A11.959 11.959 0 013.598 6 11.99 14.814 3.598 6 11.99 2.586 3.598 6 11.99 14.814 3.598 6 11.99 2.586zm15.892 16.8c-.26.56-.99.95-1.642.95h-1.5a1.5 1.5 0 01-1.5-1.5v-1.5a1.5 1.5 0 01.938-1.393l2.616-1.047a1.5 1.5 0 011.946.432l.001.002c.412.393.445 1.043.087 1.47l-1.95 2.446z" /></svg></div>
+                    <h3>Secret Verification</h3>
+                    <p>Verify secrets without exposing them using valid() method.</p>
                 </div>
                 <div class="feature">
                     <div class="feature-icon"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M9 17.25v1.007a3 3 0 01-.879 2.122L7.5 21h9l-.621-.621A3 3 0 0115 18.257V17.25m6-12V15a2.25 2.25 0 01-2.25 2.25H5.25A2.25 2.25 0 013 15V5.25A2.25 2.25 0 015.25 3h13.5A2.25 2.25 0 0121 5.25z" /></svg></div>

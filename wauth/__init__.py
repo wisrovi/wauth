@@ -46,6 +46,7 @@ __all__ = [
     "set",
     "set_file",
     "get",
+    "valid",
     "delete",
     "list_keys",
     "WAuthError",
@@ -54,7 +55,7 @@ __all__ = [
 ]
 
 # Version info for LTS tracking
-__version__ = "0.3.2"
+__version__ = "0.4.0"
 __lts__ = True
 
 # Global verbosity: when False, suppress all loguru output from wauth
@@ -178,6 +179,29 @@ class WAuth:
             file type. Returns ``None`` if the key does not exist.
         """
         return self._driver.get_secret(key)
+
+    def valid(self, key: str, value_to_check: str) -> bool:
+        """Verify if a stored secret matches the provided value.
+
+        This method is more secure than get() when you only need to check
+        a secret's value, as the secret never leaves the library.
+
+        Args:
+            key: Unique identifier for the secret.
+            value_to_check: Value to compare against the stored secret.
+
+        Returns:
+            True if the stored secret matches value_to_check.
+
+        Example:
+            >>> auth = WAuth()
+            >>> auth.set("API_KEY", "secret123")
+            >>> auth.valid("API_KEY", "secret123")
+            True
+            >>> auth.valid("API_KEY", "wrong")
+            False
+        """
+        return self._driver.valid_secret(key, value_to_check)
 
     def delete(self, key: str) -> None:
         """Delete a secret from the vault.
@@ -316,6 +340,19 @@ class WAuth:
         """
         loop = asyncio.get_running_loop()
         return await loop.run_in_executor(None, self.get, key)
+
+    async def async_valid(self, key: str, value_to_check: str) -> bool:
+        """Async variant of :meth:`valid`.
+
+        Args:
+            key: Unique identifier for the secret.
+            value_to_check: Value to compare against stored secret.
+
+        Returns:
+            True if the stored secret matches value_to_check.
+        """
+        loop = asyncio.get_running_loop()
+        return await loop.run_in_executor(None, self.valid, key, value_to_check)
 
     async def async_delete(self, key: str) -> None:
         """Async variant of :meth:`delete`.
