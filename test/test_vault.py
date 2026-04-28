@@ -189,11 +189,11 @@ class TestVault:
     def test_save_triggers_vault_error(self, tmp_db_path: str, monkeypatch) -> None:
         """Verify that save raises VaultError on database failure."""
         vault = Vault(db_path=tmp_db_path)
-        # Force the context manager to raise
+        # Force _execute to raise
         monkeypatch.setattr(
             vault.db,
-            "_get_connection",
-            lambda: (_ for _ in ()).throw(OSError("disk full")),
+            "_execute",
+            lambda *a, **kw: (_ for _ in ()).throw(OSError("disk full")),
         )
         with pytest.raises(VaultError):
             vault.save("FAIL_KEY", "value", "text")
@@ -202,11 +202,6 @@ class TestVault:
     def test_get_triggers_vault_error(self, tmp_db_path: str, monkeypatch) -> None:
         """Verify that get raises VaultError on database failure."""
         vault = Vault(db_path=tmp_db_path)
-        monkeypatch.setattr(
-            vault.db,
-            "_get_connection",
-            lambda: (_ for _ in ()).throw(OSError("disk full")),
-        )
         # get_by_field uses db internally — mock it
         monkeypatch.setattr(vault.db, "get_by_field", lambda **kw: (_ for _ in ()).throw(OSError("fail")))
         with pytest.raises(VaultError):
@@ -218,8 +213,8 @@ class TestVault:
         vault = Vault(db_path=tmp_db_path)
         monkeypatch.setattr(
             vault.db,
-            "_get_connection",
-            lambda: (_ for _ in ()).throw(OSError("disk full")),
+            "_execute",
+            lambda *a, **kw: (_ for _ in ()).throw(OSError("disk full")),
         )
         with pytest.raises(VaultError):
             vault.delete("ANY_KEY")
@@ -230,8 +225,8 @@ class TestVault:
         vault = Vault(db_path=tmp_db_path)
         monkeypatch.setattr(
             vault.db,
-            "_get_connection",
-            lambda: (_ for _ in ()).throw(OSError("disk full")),
+            "_execute",
+            lambda *a, **kw: (_ for _ in ()).throw(OSError("disk full")),
         )
         with pytest.raises(VaultError):
             vault.list_keys()
@@ -242,8 +237,8 @@ class TestVault:
         vault = Vault(db_path=tmp_db_path)
         monkeypatch.setattr(
             vault.db,
-            "_get_connection",
-            lambda: (_ for _ in ()).throw(OSError("disk full")),
+            "_execute",
+            lambda *a, **kw: (_ for _ in ()).throw(OSError("disk full")),
         )
         with pytest.raises(VaultError):
             vault.count()

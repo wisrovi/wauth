@@ -5,7 +5,7 @@
 [![Pylint Score](https://img.shields.io/badge/pylint-9.95%2F10-brightgreen.svg)](#)
 [![Test Coverage](https://img.shields.io/badge/coverage-98%25-brightgreen.svg)](#)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
-[![LTS](https://img.shields.io/badge/LTS-0.1.0-blue.svg)](VERSIONING.md)
+[![LTS](https://img.shields.io/badge/LTS-0.3.0-blue.svg)](VERSIONING.md)
 
 > **Store, rotate, back up, and retrieve secrets encrypted with Fernet (AES-256), backed by SQLite — tied to the machine they were created on.**
 
@@ -101,7 +101,7 @@ wauth/
 ├── test/
 │   ├── conftest.py              # Shared fixtures
 │   ├── test_core.py             # CryptoEngine (13 tests)
-│   ├── test_vault.py            # Vault & SecretModel (22 tests)
+│   ├── test_vault.py            # Vault & SecretModel (24 tests)
 │   ├── test_utils.py            # Utility functions (10 tests)
 │   ├── test_drivers.py          # Driver tests (17 tests)
 │   ├── test_wauth.py            # WAuth & API (30 tests)
@@ -414,12 +414,12 @@ make quality       # lint + test + format check
 | **Pylint (wauth/)** | 9.95/10 | ≥ 9.5 |
 | **Pylint (test/)** | 9.89/10 | ≥ 9.5 |
 | **Test Coverage** | 98% | ≥ 95% |
-| **Tests** | 117 passing | 100% |
+| **Tests** | 129 passing | 100% |
 | **Bandit Security** | 0 medium/high | 0 |
 
 ### LTS Status
 
-WAuth v1.6.0 is an **LTS (Long Term Support)** release:
+WAuth v0.3.0 is an **LTS (Long Term Support)** release:
 
 - 24 months of security backports
 - Stable public API with deprecation guarantees

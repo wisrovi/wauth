@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>wauth - Machine-Locked Encrypted Secret Management</title>
     <meta name="description" content="wauth is a Python library for machine-locked encrypted secret management with Fernet encryption, SQLite storage, and Docker secrets support.">
-    <meta name="keywords" content="python, secrets, encryption, security, vault, fernet, cryptography, encrypted secrets">
+    <meta name="keywords" content="python, secrets, encryption, security, vault, fernet, cryptography, encrypted secrets, wisrovi">
     <meta name="author" content="William Steve Rodriguez Villamizar">
     <meta name="robots" content="index, follow">
     
@@ -36,7 +36,7 @@
             --text-primary: #f9fafb;
             --text-secondary: #9ca3af;
             --border: #374151;
-            --gradient: linear-gradient(135deg, #10b981 0%, #6366f1 100%);
+            --gradient: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
         }
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body {
@@ -44,6 +44,7 @@
             background: var(--bg-primary);
             color: var(--text-primary);
             line-height: 1.7;
+            overflow-x: hidden;
         }
         .hero {
             min-height: 100vh;
@@ -53,7 +54,7 @@
             justify-content: center;
             text-align: center;
             padding: 2rem;
-            background: radial-gradient(ellipse at top, #064e3b 0%, #030712 50%);
+            background: radial-gradient(ellipse at top, #064e3b 0%, var(--bg-primary) 55%);
             position: relative;
             overflow: hidden;
         }
@@ -62,7 +63,12 @@
             position: absolute;
             inset: 0;
             background-image: linear-gradient(rgba(16, 185, 129, 0.03) 1px, transparent 1px), linear-gradient(90deg, rgba(16, 185, 129, 0.03) 1px, transparent 1px);
-            background-size: 60px 60px;
+            background-size: 50px 50px;
+            animation: pan 120s linear infinite;
+        }
+        @keyframes pan {
+            from { background-position: 0 0; }
+            to { background-position: 500px 500px; }
         }
         .hero-content { position: relative; z-index: 1; max-width: 800px; }
         .badge {
@@ -94,20 +100,21 @@
         .btn {
             display: inline-flex;
             align-items: center;
-            gap: 0.5rem;
+            gap: 0.75rem;
             padding: 0.875rem 1.75rem;
             border-radius: 10px;
             font-weight: 600;
             font-size: 1rem;
             text-decoration: none;
-            transition: all 0.3s;
+            transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
         }
+        .btn svg { width: 20px; height: 20px; }
         .btn-primary {
             background: var(--gradient);
             color: white;
-            box-shadow: 0 4px 15px rgba(16, 185, 129, 0.4);
+            box-shadow: 0 4px 15px rgba(16, 185, 129, 0.3);
         }
-        .btn-primary:hover { transform: translateY(-3px); box-shadow: 0 8px 25px rgba(16, 185, 129, 0.5); }
+        .btn-primary:hover { transform: translateY(-3px) scale(1.02); box-shadow: 0 8px 25px rgba(16, 185, 129, 0.4); }
         .btn-secondary {
             background: var(--bg-tertiary);
             color: var(--text-primary);
@@ -132,13 +139,14 @@
             text-align: left;
             max-width: 550px;
             margin: 0 auto;
+            backdrop-filter: blur(10px);
         }
         .code .comment { color: #8b949e; }
         .code .keyword { color: #ff7b72; }
         .code .function { color: #d2a8ff; }
         .code .string { color: #a5d6ff; }
         
-        .section { padding: 6rem 0; }
+        .section { padding: 6rem 0; position: relative; }
         .container { max-width: 1200px; margin: 0 auto; padding: 0 2rem; }
         .section-header { text-align: center; margin-bottom: 4rem; }
         .section-label {
@@ -165,7 +173,7 @@
             margin: 1rem auto 0;
         }
         
-        .features { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 1.5rem; }
+        .features { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1.5rem; }
         .feature {
             background: var(--bg-tertiary);
             border: 1px solid var(--border);
@@ -173,18 +181,19 @@
             padding: 2rem;
             transition: all 0.3s;
         }
-        .feature:hover { border-color: var(--primary); transform: translateY(-4px); }
+        .feature:hover { border-color: var(--primary); transform: translateY(-4px) scale(1.01); }
         .feature-icon {
             width: 48px;
             height: 48px;
-            background: rgba(16, 185, 129, 0.2);
+            color: var(--primary-light);
+            background: rgba(16, 185, 129, 0.15);
             border-radius: 12px;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 1.5rem;
-            margin-bottom: 1rem;
+            margin-bottom: 1.5rem;
         }
+        .feature-icon svg { width: 24px; height: 24px; }
         .feature h3 { font-size: 1.25rem; margin-bottom: 0.75rem; font-weight: 600; }
         .feature p { color: var(--text-secondary); font-size: 0.9375rem; }
         
@@ -194,7 +203,9 @@
             border: 1px solid var(--border);
             border-radius: 16px;
             overflow: hidden;
+            transition: all 0.3s;
         }
+        .install-card:hover { border-color: var(--secondary); }
         .install-header {
             background: var(--bg-secondary);
             padding: 1.25rem 1.5rem;
@@ -226,6 +237,9 @@
         }
         .stat-label { color: var(--text-secondary); }
         
+        .wisrovi-suite { text-align: center; }
+        .wisrovi-suite .section-desc { margin-bottom: 2.5rem; }
+
         footer { background: var(--bg-secondary); border-top: 1px solid var(--border); padding: 3rem 0; }
         .footer-content {
             max-width: 1200px;
@@ -249,7 +263,7 @@
         }
         .footer-brand-icon svg { width: 20px; height: 20px; color: white; }
         .footer-links { display: flex; gap: 2rem; }
-        .footer-link { color: var(--text-secondary); text-decoration: none; font-size: 0.875rem; }
+        .footer-link { color: var(--text-secondary); text-decoration: none; font-size: 0.875rem; transition: color 0.3s; }
         .footer-link:hover { color: var(--text-primary); }
         .footer-copy { color: #6b7280; font-size: 0.875rem; }
         
@@ -262,7 +276,7 @@
 <body>
     <section class="hero">
         <div class="hero-content">
-            <div class="badge">v0.1.0 — Secure Secret Management</div>
+            <div class="badge">v0.3.0 — Secure Secret Management</div>
             <h1><span>wauth</span> — Machine-Locked Encrypted Secrets</h1>
             <p class="subtitle">Store, rotate, and retrieve secrets encrypted with Fernet (AES-128-CBC). Secrets are tied to the machine they were created on, preventing accidental leakage across environments.</p>
             <div class="actions">
@@ -273,15 +287,15 @@
                 <a href="https://wauth.readthedocs.io/" class="btn btn-secondary" target="_blank">Documentation</a>
             </div>
             <div class="badges">
-                <div class="badge-item"><img src="https://img.shields.io/pypi/v/wauth.svg" alt="PyPI"></div>
+                <div class="badge-item"><img src="https://img.shields.io/pypi/v/wauth.svg?label=pypi" alt="PyPI"></div>
                 <div class="badge-item"><img src="https://img.shields.io/pypi/pyversions/wauth.svg" alt="Python"></div>
                 <div class="badge-item"><img src="https://img.shields.io/github/license/wisrovi/wauth.svg" alt="License"></div>
-                <div class="badge-item"><img src="https://img.shields.io/badge/tests-117%20passing-10b981" alt="Tests"></div>
+                <div class="badge-item"><img src="https://img.shields.io/badge/tests-129%20passing-10b981" alt="Tests"></div>
             </div>
             <div class="code">
-                <span class="comment"># Install</span><br>
+                <span class="comment"># Install wauth</span><br>
                 pip install wauth<br><br>
-                <span class="comment"># Use</span><br>
+                <span class="comment"># Use in your project</span><br>
                 <span class="keyword">from</span> wauth <span class="keyword">import</span> WAuth<br><br>
                 auth = WAuth()<br>
                 auth.set(<span class="string">"API_KEY"</span>, <span class="string">"secret-value"</span>)<br>
@@ -294,47 +308,47 @@
         <div class="container">
             <div class="section-header">
                 <span class="section-label">Features</span>
-                <h2 class="section-title">Secure <span style="color: var(--primary);">Secret Management</span></h2>
-                <p class="section-desc">Everything you need to store and manage secrets securely.</p>
+                <h2 class="section-title">Secure, Simple <span style="color: var(--primary);">Secret Management</span></h2>
+                <p class="section-desc">Everything you need to store and manage secrets securely without external dependencies or complex setups.</p>
             </div>
             <div class="features">
                 <div class="feature">
-                    <div class="feature-icon">🔒</div>
+                    <div class="feature-icon"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M16.5 10.5V6.75a4.5 4.5 0 10-9 0v3.75m-.75 11.25h10.5a2.25 2.25 0 002.25-2.25v-6.75a2.25 2.25 0 00-2.25-2.25H6.75a2.25 2.25 0 00-2.25 2.25v6.75a2.25 2.25 0 002.25 2.25z" /></svg></div>
                     <h3>Fernet Encryption</h3>
                     <p>AES-128-CBC with HMAC-SHA256 for authenticated encryption.</p>
                 </div>
                 <div class="feature">
-                    <div class="feature-icon">💻</div>
+                    <div class="feature-icon"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M9 17.25v1.007a3 3 0 01-.879 2.122L7.5 21h9l-.621-.621A3 3 0 0115 18.257V17.25m6-12V15a2.25 2.25 0 01-2.25 2.25H5.25A2.25 2.25 0 013 15V5.25A2.25 2.25 0 015.25 3h13.5A2.25 2.25 0 0121 5.25z" /></svg></div>
                     <h3>Machine Locking</h3>
                     <p>Secrets tied to machine ID — cannot decrypt on other machines.</p>
                 </div>
                 <div class="feature">
-                    <div class="feature-icon">💾</div>
+                    <div class="feature-icon"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M20.25 6.375c0 2.278-3.694 4.125-8.25 4.125S3.75 8.653 3.75 6.375m16.5 0c0-2.278-3.694-4.125-8.25-4.125S3.75 4.097 3.75 6.375m16.5 0v11.25c0 2.278-3.694 4.125-8.25 4.125s-8.25-1.847-8.25-4.125V6.375" /></svg></div>
                     <h3>SQLite Storage</h3>
                     <p>Persistent encrypted storage via wsqlite with Pydantic models.</p>
                 </div>
                 <div class="feature">
-                    <div class="feature-icon">🐳</div>
+                    <div class="feature-icon"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21.289 8.232c.07-.432.111-.874.111-1.326C21.4 3.447 18.053 0 13.561 0c-3.339 0-6.191 2.308-7.203 5.426-.145.432-.23.879-.289 1.341l-4.523.879.03.161c.015.071.03.149.044.221l2.251 11.25c.161.795.848 1.385 1.667 1.385h12.96c.819 0 1.506-.59 1.667-1.385l2.251-11.25a2.53 2.53 0 00.045-.221l.03-.161-4.523-.88zM8.25 15H6.75v-3.75h1.5V15zm4.5 0h-1.5v-3.75h1.5V15zm4.5 0h-1.5v-3.75h1.5V15z"></path></svg></div>
                     <h3>Docker Secrets</h3>
                     <p>Read secrets from /run/secrets when running in containers.</p>
                 </div>
                 <div class="feature">
-                    <div class="feature-icon">🔄</div>
+                    <div class="feature-icon"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M16.023 9.348h4.992v-.001M2.985 19.644v-4.992m0 0h4.992m-4.993 0l3.181 3.183a8.25 8.25 0 0011.667 0l3.181-3.183m-4.991-2.828a8.25 8.25 0 01-11.667 0l-3.181 3.183m11.667-11.667l-3.181 3.183m4.991 2.828a8.25 8.25 0 00-11.667 0l-3.181-3.183" /></svg></div>
                     <h3>Key Rotation</h3>
                     <p>Rotate encryption keys with automatic re-encryption.</p>
                 </div>
                 <div class="feature">
-                    <div class="feature-icon">⏰</div>
+                    <div class="feature-icon"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M12 6v6h4.5m4.5 0a9 9 0 11-18 0 9 9 0 0118 0z" /></svg></div>
                     <h3>TTL Support</h3>
                     <p>Auto-expire secrets with time-to-live settings.</p>
                 </div>
                 <div class="feature">
-                    <div class="feature-icon">📦</div>
+                    <div class="feature-icon"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M20.25 7.5l-.625 10.632a2.25 2.25 0 01-2.247 2.118H6.622a2.25 2.25 0 01-2.247-2.118L3.75 7.5M10 11.25h4M3.375 7.5h17.25c.621 0 1.125-.504 1.125-1.125v-1.5c0-.621-.504-1.125-1.125-1.125H3.375c-.621 0-1.125.504-1.125 1.125v1.5c0 .621.504 1.125 1.125 1.125z" /></svg></div>
                     <h3>Backup & Restore</h3>
                     <p>Export/import encrypted vault snapshots.</p>
                 </div>
                 <div class="feature">
-                    <div class="feature-icon">⚡</div>
+                    <div class="feature-icon"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M3.75 13.5l10.5-11.25L12 10.5h8.25L9.75 21.75 12 13.5H3.75z" /></svg></div>
                     <h3>Async Support</h3>
                     <p>Full async API: async_set, async_get, async_delete.</p>
                 </div>
@@ -382,7 +396,7 @@
                 <h2 class="section-title">Code Metrics</h2>
             </div>
             <div class="stats">
-                <div class="stat"><div class="stat-value">117</div><div class="stat-label">Tests</div></div>
+                <div class="stat"><div class="stat-value">129</div><div class="stat-label">Tests</div></div>
                 <div class="stat"><div class="stat-value">98%</div><div class="stat-label">Coverage</div></div>
                 <div class="stat"><div class="stat-value">9.95</div><div class="stat-label">Pylint</div></div>
                 <div class="stat"><div class="stat-value">0</div><div class="stat-label">Security Issues</div></div>
@@ -390,9 +404,23 @@
         </div>
     </section>
 
+    <section class="section wisrovi-suite">
+        <div class="container">
+            <div class="section-header">
+                <span class="section-label">Wisrovi Suite</span>
+                <h2 class="section-title">Part of a Growing Open-Source Ecosystem</h2>
+                <p class="section-desc">WAuth is one of several high-quality, developer-focused tools built by Wisrovi. Discover more libraries for data pipelines, CLI tools, and more.</p>
+            </div>
+            <a href="https://wisrovi.dev" class="btn btn-primary" target="_blank">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M13.19 8.688a4.5 4.5 0 011.242 7.244l-4.5 4.5a4.5 4.5 0 01-6.364-6.364l1.757-1.757m13.35-.622l1.757-1.757a4.5 4.5 0 00-6.364-6.364l-4.5 4.5a4.5 4.5 0 001.242 7.244" /></svg>
+                Explore on wisrovi.dev
+            </a>
+        </div>
+    </section>
+
     <footer>
         <div class="footer-content">
-            <a href="#" class="footer-brand">
+            <a href="https://wisrovi.dev" class="footer-brand">
                 <div class="footer-brand-icon">
                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12l5 5L20 7"/></svg>
                 </div>
@@ -402,6 +430,7 @@
                 <a href="https://github.com/wisrovi/wauth" class="footer-link">GitHub</a>
                 <a href="https://wauth.readthedocs.io/" class="footer-link">Docs</a>
                 <a href="https://pypi.org/project/wauth/" class="footer-link">PyPI</a>
+                <a href="https://wisrovi.dev" class="footer-link">wisrovi.dev</a>
             </div>
             <p class="footer-copy">MIT License © 2024-2026 William Rodriguez</p>
         </div>

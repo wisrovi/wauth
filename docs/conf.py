@@ -18,7 +18,7 @@ copyright = "2026, William Rodríguez"
 author = "William Rodríguez — wisrovi"
 
 # The full version, including alpha/beta/rc tags
-release = "1.5.3"
+release = "0.3.0"
 
 # -- General configuration ---------------------------------------------------
 

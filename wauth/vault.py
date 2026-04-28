@@ -91,9 +91,7 @@ class Vault:
         values = tuple(secret.model_dump().values())
         query = f"INSERT OR REPLACE INTO {table} ({fields}) VALUES ({placeholders})"  # nosec B608
         try:
-            with self.db._get_connection() as conn:  # pylint: disable=protected-access
-                conn.execute(query, values)
-                conn.commit()
+            self.db._execute(query, values)  # pylint: disable=protected-access
             _debug(f"Secret saved: key='{key}', type='{val_type}'")
         except Exception as exc:
             _error(f"Failed to save secret '{key}': {exc}")
@@ -147,11 +145,9 @@ class Vault:
         table = self.db.table_name
         query = f"DELETE FROM {table} WHERE key = ?"  # nosec B608
         try:
-            with self.db._get_connection() as conn:  # pylint: disable=protected-access
-                cursor = conn.execute(query, (key,))
-                conn.commit()
-                if cursor.rowcount == 0:
-                    raise KeyNotFoundError(f"Key not found: '{key}'")
+            rowcount = self.db._execute(query, (key,))  # pylint: disable=protected-access
+            if rowcount == 0:
+                raise KeyNotFoundError(f"Key not found: '{key}'")
             _debug(f"Secret deleted: key='{key}'")
         except KeyNotFoundError:
             raise
@@ -168,8 +164,7 @@ class Vault:
         table = self.db.table_name
         query = f"SELECT key FROM {table}"  # nosec B608
         try:
-            with self.db._get_connection() as conn:  # pylint: disable=protected-access
-                rows = conn.execute(query).fetchall()
+            rows = self.db._execute(query)  # pylint: disable=protected-access
             keys = [row[0] for row in rows]
             _debug(f"Listed {len(keys)} keys in vault")
             return keys
@@ -186,9 +181,8 @@ class Vault:
         table = self.db.table_name
         query = f"SELECT COUNT(*) FROM {table}"  # nosec B608
         try:
-            with self.db._get_connection() as conn:  # pylint: disable=protected-access
-                result = conn.execute(query).fetchone()
-            count: int = result[0] if result else 0
+            result = self.db._execute(query)  # pylint: disable=protected-access
+            count: int = result[0][0] if result else 0
             _debug(f"Vault contains {count} secrets")
             return count
         except Exception as exc:
