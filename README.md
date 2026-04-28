@@ -5,7 +5,7 @@
 [![Pylint Score](https://img.shields.io/badge/pylint-9.95%2F10-brightgreen.svg)](#)
 [![Test Coverage](https://img.shields.io/badge/coverage-98%25-brightgreen.svg)](#)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
-[![LTS](https://img.shields.io/badge/LTS-0.3.0-blue.svg)](VERSIONING.md)
+[![LTS](https://img.shields.io/badge/LTS-0.3.1-blue.svg)](VERSIONING.md)
 
 > **Store, rotate, back up, and retrieve secrets encrypted with Fernet (AES-256), backed by SQLite — tied to the machine they were created on.**
 
@@ -419,7 +419,7 @@ make quality       # lint + test + format check
 
 ### LTS Status
 
-WAuth v0.3.0 is an **LTS (Long Term Support)** release:
+WAuth v0.3.1 is an **LTS (Long Term Support)** release:
 
 - 24 months of security backports
 - Stable public API with deprecation guarantees

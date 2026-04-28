@@ -16,7 +16,7 @@ import os
 from pathlib import Path
 
 from pydantic import BaseModel
-from wpipe import Condition, Pipeline, auto_dict_input, state, to_obj
+from wpipe import Condition, Pipeline, step, to_obj
 
 from wauth import WAuth
 
@@ -55,7 +55,7 @@ PIPELINE_DB = "./wpipe_wauth.db"
 CONFIG_DIR = "./config"
 
 
-@state(name="login", version="v1.0")
+@step(name="login", version="v1.0")
 @to_obj
 def login(my_data: SecretInfo) -> AccessResult:
     """Authenticate user by comparing credentials against stored secrets."""
@@ -66,7 +66,7 @@ def login(my_data: SecretInfo) -> AccessResult:
     return AccessResult(permitid_access=permitid_access)
 
 
-@state(name="search_db", version="v1.0")
+@step(name="search_db", version="v1.0")
 @to_obj
 def search_db(my_data: SecretInfo) -> UserProfile:
     """Fetch user profile from database."""
@@ -77,7 +77,7 @@ def search_db(my_data: SecretInfo) -> UserProfile:
     )
 
 
-@state(name="report", version="v1.0")
+@step(name="report", version="v1.0")
 @to_obj
 def report(my_data: SecretInfo) -> ReportData:
     """Generate final report with user data."""
@@ -129,7 +129,6 @@ def main() -> None:
         ]
     )
 
-    @auto_dict_input
     def run_pipeline(car_dict):
         return wauth_wpipe.run(car_dict)
 
