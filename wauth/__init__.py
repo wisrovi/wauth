@@ -54,7 +54,7 @@ __all__ = [
 ]
 
 # Version info for LTS tracking
-__version__ = "0.3.1"
+__version__ = "0.3.2"
 __lts__ = True
 
 # Global verbosity: when False, suppress all loguru output from wauth
