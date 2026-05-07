@@ -23,6 +23,8 @@
 ## Key Features
 
 - **Fernet Encryption** — AES-128-CBC via the `cryptography` library, with a 32-byte machine-derived key (SHA-256 of salted machine ID).
+- **On-the-fly Encryption** — New `encrypt()` and `decrypt()` methods for manual data protection without requiring database storage.
+- **Auto-JSON Support** — Automatic serialization/deserialization for `dict` and `list` types during encryption and decryption.
 - **SQLite-Backed Persistence** — Secrets stored in a local SQLite database via `wsqlite`, with automatic directory creation.
 - **Docker Secret Support** — Read Docker Swarm/Compose secrets from `/run/secrets` when running inside containers.
 - **Dual Driver Architecture** — Factory pattern automatically selects between local encrypted vault and Docker secrets based on runtime environment.
