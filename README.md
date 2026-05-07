@@ -9,7 +9,7 @@
 [![Pylint Score](https://img.shields.io/badge/pylint-9.95%2F10-brightgreen.svg)](#)
 [![Test Coverage](https://img.shields.io/badge/coverage-98%25-brightgreen.svg)](#)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
-[![LTS](https://img.shields.io/badge/LTS-0.4.0-blue.svg)](VERSIONING.md)
+[![LTS](https://img.shields.io/badge/LTS-0.5.0-blue.svg)](VERSIONING.md)
 
 > **Store, rotate, back up, retrieve, and verify secrets encrypted with Fernet (AES-256), backed by SQLite — tied to the machine they were created on.**
 
@@ -444,7 +444,7 @@ asyncio.run(main())
 # Basic usage
 python "examples/00 base/example.py"
 
-# Secure secret verification (NEW in v0.4.0)
+# Secure secret verification (NEW in v0.5.0)
 python "examples/18 valid method/example.py"
 
 # Async secret verification
@@ -500,7 +500,7 @@ make quality       # lint + test + format check
 
 | Metric | Score | Target |
 |--------|-------|--------|
-| **Version** | 0.4.0 | Latest |
+| **Version** | 0.5.0 | Latest |
 | **Pylint (wauth/)** | 9.95/10 | ≥ 9.5 |
 | **Pylint (test/)** | 9.89/10 | ≥ 9.5 |
 | **Test Coverage** | 98% | ≥ 95% |
@@ -509,7 +509,7 @@ make quality       # lint + test + format check
 
 ### LTS Status
 
-WAuth v0.4.0 is the **latest stable** release:
+WAuth v0.5.0 is the **latest stable** release:
 
 - 24 months of security backports
 - Stable public API with deprecation guarantees
@@ -566,6 +566,32 @@ pipeline.set_steps([authenticate, Condition(...)])
 ```
 
 See `examples/17 pipeline/` for the full example.
+
+
+
+
+
+---
+
+## 🛡️ The Wisrovi Philosophy: Productive Quality
+
+This project is more than just a **wrapper**; it's a layer of **strategic abstraction**.
+
+In today's development ecosystem, the technical complexity of core tools (like Docker, Kafka, or YOLO) often becomes an obstacle to innovation. The **wisrovi SUITE** was born with a clear mission: **to tame technology**.
+
+### Why use this library instead of the core tools?
+
+* **Critical Acceleration:** We reduce the learning curve and development time by a factor of **3.3x**. What used to take hours of configuration is now resolved in minutes.
+
+* **Professional Opinion:** We don't just wrap features; we natively integrate **best practices for security, error handling, and resilience**. * **Business Focus:** By eliminating the boilerplate and unnecessary complexity, we allow developers to focus on creating value, not battling with the infrastructure.
+
+* **Production Standard:** Every component of this suite is designed to be **Production-Ready**. We don't build tools for prototypes, but for solutions that scale in the real world.
+
+> *“We didn't reinvent the wheel; we built the high-performance vehicle that enables businesses to reach the finish line faster.”*
+
+
+
+---
 
 ## Author
 
