@@ -1,3 +1,7 @@
+
+
+
+
 # WAuth — Machine-Locked Encrypted Secret Management
 
 [![PyPI version](https://img.shields.io/pypi/v/wauth.svg)](https://pypi.org/project/wauth/)
@@ -8,6 +12,11 @@
 [![LTS](https://img.shields.io/badge/LTS-0.4.0-blue.svg)](VERSIONING.md)
 
 > **Store, rotate, back up, retrieve, and verify secrets encrypted with Fernet (AES-256), backed by SQLite — tied to the machine they were created on.**
+
+<img width="1024" height="572" alt="IMG-20260507-WA0007" src="https://github.com/user-attachments/assets/967081db-4ec7-4adb-ab8c-c5737e06aadb" />
+
+
+
 
 ---
 
@@ -569,3 +578,18 @@ See `examples/17 pipeline/` for the full example.
 ---
 
 *WAuth is designed for developers who need simple, secure, machine-locked secret storage. Perfect for local development environments, CI/CD pipelines, and single-node deployments. LTS since v1.6.0.*
+
+
+
+---
+### 🛠️ Roadmap & Future Integration (Updated May 2026)
+
+We are entering the **Distributed AI Era**. The wisrovi suite is evolving to support massive-scale machine learning orchestration:
+
+* **⚡ Core Stability:** Maintenance and performance optimization across all `w-libraries`.
+* **🤖 Coming Soon: `wtrain`:** Distributed Evolutionary Training for YOLO models.
+* **🛰️ Coming Soon: `wcelery`:** High-performance task distribution with native `wauth` security.
+* **🎓 Wisrovi Academy:** Official certification and advanced tutorials are on the way.
+
+**Status:** Active development. New major releases coming this quarter.
+---
