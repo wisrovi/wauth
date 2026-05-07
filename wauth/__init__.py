@@ -19,7 +19,7 @@ import json
 import os
 import tomllib
 from pathlib import Path
-from typing import Any, Optional
+from typing import Any, Optional, Union
 
 from wsqlite import WSQLite
 
@@ -49,16 +49,19 @@ __all__ = [
     "valid",
     "delete",
     "list_keys",
+    "encrypt",
+    "decrypt",
     "WAuthError",
     "set_verbose",
     "get_verbose",
 ]
 
 # Version info for LTS tracking
-__version__ = "0.4.0"
+__version__ = "0.5.0"
 __lts__ = True
 
 # Global verbosity: when False, suppress all loguru output from wauth
+
 
 def set_verbose(enabled: bool) -> None:
     """Enable or disable loguru output across the entire WAuth library.
@@ -179,6 +182,51 @@ class WAuth:
             file type. Returns ``None`` if the key does not exist.
         """
         return self._driver.get_secret(key)
+
+    def encrypt(self, data: Union[str, bytes, dict, list]) -> str:
+        """Encrypt data without storing it in the vault.
+
+        Args:
+            data: Plaintext string, bytes, dictionary, or list to encrypt.
+                Dictionaries and lists are automatically serialized to JSON.
+
+        Returns:
+            Base64-encoded Fernet token.
+        """
+        if isinstance(data, (dict, list)):
+            raw_data = json.dumps(data).encode("utf-8")
+            _debug(f"Data serialized to JSON before encryption: {type(data)}")
+        else:
+            raw_data = data.encode() if isinstance(data, str) else data
+
+        return self._driver.engine.encrypt(raw_data)
+
+    def decrypt(self, token: str) -> Union[str, bytes, dict, list]:
+        """Decrypt a Fernet token without retrieving it from the vault.
+
+        Args:
+            token: Base64-encoded Fernet token.
+
+        Returns:
+            Decrypted plaintext. Returns a ``dict`` or ``list`` if it was
+            a JSON string, a ``str`` if it can be decoded as UTF-8,
+            otherwise ``bytes``.
+        """
+        decrypted = self._driver.engine.decrypt(token)
+        try:
+            decoded = decrypted.decode("utf-8")
+            # Try to parse as JSON (dictionaries or lists)
+            if decoded.strip().startswith(("{", "[")):
+                try:
+                    result = json.loads(decoded)
+                    if isinstance(result, (dict, list)):
+                        _debug("Decrypted data successfully parsed as JSON")
+                        return result
+                except json.JSONDecodeError:
+                    pass
+            return decoded
+        except UnicodeDecodeError:
+            return decrypted
 
     def valid(self, key: str, value_to_check: str) -> bool:
         """Verify if a stored secret matches the provided value.
@@ -425,6 +473,35 @@ def get(key: str) -> str | bytes | None:
         file type. Returns ``None`` if the key does not exist.
     """
     return _driver.get_secret(key)
+
+
+def encrypt(data: Union[str, bytes]) -> str:
+    """Encrypt data without storing it in the vault (functional API).
+
+    Args:
+        data: Plaintext string or bytes to encrypt.
+
+    Returns:
+        Base64-encoded Fernet token.
+    """
+    raw_data = data.encode() if isinstance(data, str) else data
+    return _driver.engine.encrypt(raw_data)
+
+
+def decrypt(token: str) -> Union[str, bytes]:
+    """Decrypt a Fernet token (functional API).
+
+    Args:
+        token: Base64-encoded Fernet token.
+
+    Returns:
+        Decrypted plaintext.
+    """
+    decrypted = _driver.engine.decrypt(token)
+    try:
+        return decrypted.decode("utf-8")
+    except UnicodeDecodeError:
+        return decrypted
 
 
 def delete(key: str) -> None:
