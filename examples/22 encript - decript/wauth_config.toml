@@ -1,0 +1,3 @@
+[wauth]
+db_path = "example_encryption.db"
+custom_key = "temporary-secret-key-123"
