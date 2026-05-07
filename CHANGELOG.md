@@ -4,7 +4,21 @@ All notable changes to WAuth will be documented in this file.
 
 ---
 
-## [Unreleased]
+## [0.5.0] - 2026-05-07
+
+### Added
+- **On-the-fly Encryption**: New `encrypt()` and `decrypt()` methods in `WAuth` class and functional API for manual data protection without persistence.
+- **Auto-JSON Support**: Automatic serialization/deserialization for `dict` and `list` types in `encrypt()` and `decrypt()`.
+- **Enhanced Examples**: Refactored all examples (00-22) to high-quality standards (Google-style docstrings, full type hints, and professional English).
+- **Example Cleanup**: Added automatic cleanup of temporary database and configuration files in all examples.
+
+### Changed
+- **Nomenclature**: Standardized encryption methods to international English (`encrypt`/`decrypt`).
+- **Project Structure**: Updated version metadata across all configuration files (README, pyproject.toml, index.html, Sphinx).
+
+---
+
+## [0.4.0] - 2026-05-01
 
 ### Added
 - **examples/17 pipeline/**: New example demonstrating WAuth + WPipe integration for access control
